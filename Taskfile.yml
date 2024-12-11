@@ -7,7 +7,7 @@ tasks:
     - echo "Exporting Conda environment..."
     - conda env export --name {{.CONDA_ENV}} --file {{.OUTPUT_FILE}}
     vars:
-      CONDA_ENV: discord
+      CONDA_ENV: bot
       OUTPUT_FILE: environment.yml
 
   update-conda-env:
@@ -16,7 +16,7 @@ tasks:
     - echo "Updating Conda environment '{{.CONDA_ENV}}' from '{{.INPUT_FILE}}'..."
     - conda env update --name {{.CONDA_ENV}} --file {{.INPUT_FILE}}
     vars:
-      CONDA_ENV: discord
+      CONDA_ENV: bot
       INPUT_FILE: environment.yml
 
   create-conda-env:
@@ -25,5 +25,5 @@ tasks:
     - echo "Creating a new Conda environment '{{.CONDA_ENV}}' from '{{.INPUT_FILE}}'..."
     - conda env create --name {{.CONDA_ENV}} --file {{.INPUT_FILE}}
     vars:
-      CONDA_ENV: discord
+      CONDA_ENV: bot
       INPUT_FILE: environment.yml
