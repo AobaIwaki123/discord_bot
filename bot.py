@@ -1,55 +1,49 @@
 import os
-from datetime import datetime
 
 import discord
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
 
-# 環境変数からトークンをロード
+# 環境変数からトークンとチャンネルIDをロード
 load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
-CHANNEL_ID = int(os.getenv("CHANNEL_ID"))  # 通知を送るチャンネルIDを設定
+TOKEN = os.environ["DISCORD_TOKEN"]
+CHANNEL_ID = int(os.environ["CHANNEL_ID"])
 
 # Intentsを設定
 intents = discord.Intents.default()
-intents.messages = True
-
 client = discord.Client(intents=intents)
 
 # スケジューラーを初期化
-scheduler = BackgroundScheduler()
-
-
-# 通知メッセージを送る関数
-async def send_notification():
-    channel = client.get_channel(CHANNEL_ID)
-    if channel:
-        await channel.send(
-            f'定期通知: 現在の時刻は {datetime.now().strftime("%Y-%m-%d %H:%M:%S")} です！'
-        )
-
-
-# スケジュール設定 (毎日10:00に通知を送信)
-@scheduler.scheduled_job("cron", hour=10, minute=0)
-def scheduled_job():
-    client.loop.create_task(send_notification())
+scheduler = AsyncIOScheduler()
 
 
 @client.event
 async def on_ready():
-    print(f"{client.user} がログインしました")
-    scheduler.start()  # スケジューラーを開始
+    print(f"Logged in as {client.user}")
+
+    # スケジューラー開始
+    scheduler.start()
+    print("Scheduler started!")
 
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        return
+    # コマンドで手動リマインダーを送る
+    if message.content.lower() == "!remind":
+        await remind()
 
-    if message.content.startswith("!time"):
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        await message.channel.send(f"現在の時刻は {current_time} です")
 
+# リマインドメッセージを送る関数
+async def remind():
+    channel = client.get_channel(CHANNEL_ID)
+    if channel:
+        await channel.send("リマインド: EC2を停止しましたか?")
+    else:
+        print(f"Channel with ID {CHANNEL_ID} not found.")
+
+
+# 毎日0:00にリマインダーを送信
+scheduler.add_job(remind, "cron", hour=0, minute=0)
 
 # ボットを実行
 client.run(TOKEN)
