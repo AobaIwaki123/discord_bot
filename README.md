@@ -7,6 +7,14 @@ EC2のインスタンスを落としたかどうか、6時間ごとに通知を�
 - conda 24.3.0
 - Python: 3.12.7
 
+## 動作確認
+
+```sh
+$ python hello_bot.py
+```
+
+![alt text](imgs/hello.png)
+
 ## Taskfileの導入
 
 ```sh
