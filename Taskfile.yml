@@ -1,7 +1,29 @@
 version: '3'
 
 tasks:
-  hello:
+  export-conda-env:
+    desc: Export Conda environment to a YAML file
     cmds:
-    - echo 'Hello World from Task!'
-    silent: true
+    - echo "Exporting Conda environment..."
+    - conda env export --name {{.CONDA_ENV}} --file {{.OUTPUT_FILE}}
+    vars:
+      CONDA_ENV: discord
+      OUTPUT_FILE: environment.yml
+
+  update-conda-env:
+    desc: Update the existing Conda environment from the YAML file
+    cmds:
+    - echo "Updating Conda environment '{{.CONDA_ENV}}' from '{{.INPUT_FILE}}'..."
+    - conda env update --name {{.CONDA_ENV}} --file {{.INPUT_FILE}}
+    vars:
+      CONDA_ENV: discord
+      INPUT_FILE: environment.yml
+
+  create-conda-env:
+    desc: Create a new Conda environment from the YAML file
+    cmds:
+    - echo "Creating a new Conda environment '{{.CONDA_ENV}}' from '{{.INPUT_FILE}}'..."
+    - conda env create --name {{.CONDA_ENV}} --file {{.INPUT_FILE}}
+    vars:
+      CONDA_ENV: discord
+      INPUT_FILE: environment.yml
