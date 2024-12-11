@@ -13,6 +13,24 @@ EC2のインスタンスを落としたかどうか、6時間ごとに通知を�
 $ brew install go-task
 ```
 
+### Conda環境の保存
+
+```sh
+$ task export-conda-env
+```
+
+### 既存のConda環境の更新
+
+```sh
+$ task update-conda-env
+```
+
+### Conda環境の作成
+
+```sh
+$ task create-conda-env
+```
+
 ## Ref
 
 - https://zenn.dev/remew/articles/introduce-taskfile
